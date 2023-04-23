@@ -6,8 +6,11 @@ import { BiLogOut } from "react-icons/bi";
 import { useRouter } from "next/router";
 import SidebarIcons from "./SidebarIcons";
 import PostButton from "./PostButton";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { signOut } from "next-auth/react";
 
 const Sidebar = () => {
+  const { data: currentUser } = useCurrentUser();
   const router = useRouter();
   const elements = [
     {
@@ -19,11 +22,13 @@ const Sidebar = () => {
       label: "Notifications",
       to: "/notifications",
       icon: BsBellFill,
+      auth: true,
     },
     {
       label: "Profile",
       to: "/users/123",
       icon: FaUser,
+      auth: true,
     },
   ];
   return (
@@ -42,14 +47,17 @@ const Sidebar = () => {
               to={element.to}
               label={element.label}
               icon={element.icon}
+              auth={element.auth}
             />
           ))}
-          <SidebarIcons
-            to="/"
-            icon={BiLogOut}
-            onClick={() => {}}
-            label="Logout"
-          />
+          {currentUser && (
+            <SidebarIcons
+              to="/"
+              icon={BiLogOut}
+              onClick={() => signOut()}
+              label="Logout"
+            />
+          )}
           <PostButton />
         </div>
       </div>

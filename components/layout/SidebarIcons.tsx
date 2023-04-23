@@ -1,3 +1,6 @@
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import useLoginModal from "@/hooks/useLoginModal";
+import { useRouter } from "next/router";
 import React from "react";
 import { IconType } from "react-icons";
 
@@ -6,6 +9,7 @@ interface ISidebarIconsProps {
   icon: IconType;
   to: string;
   onClick?: () => void;
+  auth?: boolean;
 }
 
 const SidebarIcons: React.FC<ISidebarIconsProps> = ({
@@ -13,10 +17,22 @@ const SidebarIcons: React.FC<ISidebarIconsProps> = ({
   icon: Icon,
   to,
   onClick,
+  auth,
 }) => {
-  console.log(label);
+  const loginModal = useLoginModal();
+  const { data: currentUser } = useCurrentUser();
+  const router = useRouter();
+  const handleClick = () => {
+    if (onClick) return onClick();
+
+    if (auth && !currentUser) {
+      loginModal.onOpen();
+    } else if (to) {
+      router.push(to);
+    }
+  };
   return (
-    <div className="flex flex-row itmes-center">
+    <div onClick={handleClick} className="flex flex-row itmes-center">
       <div
         className="relative rounded-full h-14 w-14 flex justify-center items-center p-4 
         hover:bg-opacity-10 hover:bg-slate-300 cursor-pointer lg:hidden"
