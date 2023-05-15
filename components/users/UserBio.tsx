@@ -4,6 +4,7 @@ import { useUser } from "@/hooks/useUser";
 import { BiCalendar } from "react-icons/bi";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import Button from "../Button";
+import useEditModal from "@/hooks/useEditModal";
 
 interface IUserBio {
   userId: string;
@@ -12,6 +13,8 @@ interface IUserBio {
 const UserBio: React.FC<IUserBio> = ({ userId }) => {
   const { data: currentUser } = useCurrentUser();
   const { data: user } = useUser(userId);
+
+  const editModal = useEditModal();
 
   const createdAt = useMemo(() => {
     if (!user?.createdAt) {
@@ -23,7 +26,7 @@ const UserBio: React.FC<IUserBio> = ({ userId }) => {
     <div className="border-b-[1px] border-neutral-800 pb-4">
       <div className="flex justify-end p-2">
         {currentUser?.id === userId ? (
-          <Button secondary label="edit" onClick={() => {}} />
+          <Button secondary label="edit" onClick={editModal.onOpen} />
         ) : (
           <Button label="Follow" secondary onClick={() => {}} />
         )}
@@ -34,7 +37,7 @@ const UserBio: React.FC<IUserBio> = ({ userId }) => {
           <p className="text-md text-neutral-500">@{user?.username}</p>
         </div>
         <div className="flex flex-col mt-4">
-          <p>{user?.bio}</p>
+          <p className="text-white">{user?.bio}</p>
           <div className="flex flex-row items-center gap-2 mt-4 text-neutral-500">
             <BiCalendar size={24} />
             <p>Joined {createdAt}</p>
