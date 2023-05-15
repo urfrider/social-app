@@ -42,8 +42,9 @@ const Sidebar = () => {
           >
             <RiSeedlingLine size={32} color="white" />
           </div>
-          {elements.map((element) => (
+          {elements.map((element, index) => (
             <SidebarIcons
+              key={index}
               to={element.to}
               label={element.label}
               icon={element.icon}
